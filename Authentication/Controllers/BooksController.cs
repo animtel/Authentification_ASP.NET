@@ -17,6 +17,7 @@ namespace Authentication.Controllers
             book_service = new BookService();
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Index()
         {
             ViewBag.DataTable = book_service.GetBookList().ToList();
@@ -24,6 +25,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Details(int id)
         {
             foreach (var item in book_service.GetBookList())
@@ -38,11 +40,13 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Create(Book book)
         {
@@ -55,6 +59,7 @@ namespace Authentication.Controllers
             return View(book);
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(int id)
         {
             Book book = book_service.GetBook(id);
@@ -65,6 +70,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Book book)
@@ -73,6 +79,7 @@ namespace Authentication.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             Book comp = book_service.GetBook(id);
@@ -83,6 +90,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]

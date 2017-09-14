@@ -62,22 +62,24 @@
 
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function () {
  
-        $.ajaxSetup({ cache: false });
+        $.ajaxSetup({ cache: false });
  
-        $(".viewDialog").on("click", function (e) {
-            e.preventDefault();
+        $(".viewDialog").on("click", function (e) {
+            e.preventDefault();
  
-            $("<div></div>")
-                .addClass("dialog")
-                .appendTo("body")
-                .dialog({
-                    title: $(this).attr("data-dialog-title"),
-                     close: function () { $(this).remove() },
-                    modal: true
-                })
-                .load(this.href);
-        });
-    });
+            $("<div></div>")
+                .addClass("dialog")
+                .appendTo("body")
+                .dialog({
+                    title: $(this).attr("data-dialog-title"),
+                    close: function () { $(this).remove() },
+                    modal: true
+                })
+                .load(this.href);
+        });
+    });
 </script>
+
+
