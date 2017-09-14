@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Authentication.Models;
+using RolesIdentityApp.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,6 +15,9 @@ namespace Authentication
     {
         protected void Application_Start()
         {
+            Database.SetInitializer<ApplicationDbContext>(new AppDbInitializer());
+            Database.SetInitializer(new BookDbInitializer());
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Authentication.Models.Journal>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List of books</h2>
+
+
+<div id="example">
+    <table id="grid">
+        <colgroup>
+            <col />
+            <col />
+            <col style="width:110px" />
+            <col style="width:100px" />
+        </colgroup>
+        <thead id="table_head">
+            <tr>
+                <th data-field="Name">Name</th>
+                <th>CRUD</th>
+
+            </tr>
+        </thead>
+        <tbody id="table_data">
+            @foreach (var c in ViewBag.DataTable)
+            {
+                <tr>
+                    <td>
+                        <p>@c.Name</p>
+                    </td>
+                    <td>
+                        <p>
+                            <a class="btn" href="/Journals/Details/@c.Id">Смотреть</a>
+                            <a class="btn" href="/Journals/Edit/@c.Id">Редактировать </a>
+                            <a class="btn" href="/Journals/Delete/@c.Id">Удалить </a>
+
+                        </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script>
+        function Table() {
+            var target_head = $("#table_head");
+            target_head.empty();
+            target_head.append("<tr>< th data- field='Name'>Name</th><th>CRUD</th></tr >");
+            var target_data = $("#table_data");
+            target_data.empty();
+
+
+        }
+
+        $(document).ready(function () {
+            $("#grid").kendoGrid({
+                height: 500,
+                sortable: true,
+
+            });
+        });
+    </script>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+ 
+        $.ajaxSetup({ cache: false });
+ 
+        $(".viewDialog").on("click", function (e) {
+            e.preventDefault();
+ 
+            $("<div></div>")
+                .addClass("dialog")
+                .appendTo("body")
+                .dialog({
+                    title: $(this).attr("data-dialog-title"),
+                     close: function () { $(this).remove() },
+                    modal: true
+                })
+                .load(this.href);
+        });
+    });
+</script>
+
+
+
+
