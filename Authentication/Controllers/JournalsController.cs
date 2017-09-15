@@ -18,6 +18,7 @@ namespace Authentication.Controllers
             _journal_service = new JournalService();
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Index()
         {
             ViewBag.DataTable = _journal_service.GetJournalsList().ToList();
@@ -25,6 +26,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Details(int id)
         {
             foreach (var item in _journal_service.GetJournalsList())
@@ -39,12 +41,14 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "user")]
         public ActionResult Create(Journal journal)
         {
             if (ModelState.IsValid)
@@ -56,6 +60,7 @@ namespace Authentication.Controllers
             return View(journal);
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Edit(int id)
         {
             Journal comp = _journal_service.GetJournal(id);
@@ -69,12 +74,14 @@ namespace Authentication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
         public ActionResult Edit(Journal journal)
         {
             _journal_service.Add(journal);
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Delete(int id)
         {
             Journal comp = _journal_service.GetJournal(id);
@@ -88,6 +95,7 @@ namespace Authentication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
+        [Authorize(Roles = "user")]
         public ActionResult DeleteRecord(int id)
         {
             Journal comp = _journal_service.GetJournal(id);

@@ -9,7 +9,7 @@
         @Html.AntiForgeryToken()
         <div>
             @Html.LabelFor(model => model.Name)
-            <p>@Html.EditorFor(model => model.Name)</p>
+            <p>@Html.EditorFor(model => model.Name, new {@class="form-control"})</p>
         </div>
 
         <div>

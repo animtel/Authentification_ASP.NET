@@ -8,7 +8,7 @@ namespace Authentication.Controllers
 {
     public class WorkingController : Controller
     {
-
+        [Authorize(Roles = "user")]
         public ActionResult test()
         {
             List<string> all_items = new List<string>();
