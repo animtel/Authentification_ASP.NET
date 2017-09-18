@@ -10,30 +10,30 @@ namespace Authentication.Controllers
 {
     public class JournalsController : Controller
     {
-        JournalService _journal_service;
+        private JournalService _journalService;
 
 
         public JournalsController()
         {
-            _journal_service = new JournalService();
+            _journalService = new JournalService();
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Index()
         {
-            ViewBag.DataTable = _journal_service.GetJournalsList().ToList();
+            ViewBag.DataTable = _journalService.GetJournalsList().ToList();
 
             return View("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Details(int id)
         {
-            foreach (var item in _journal_service.GetJournalsList())
+            foreach (var item in _journalService.GetJournalsList())
             {
-                _journal_service.Add(item);
+                _journalService.Add(item);
             }
-            Journal it = _journal_service.GetJournal(id);
+            Journal it = _journalService.GetJournal(id);
             if (it != null)
             {
                 return PartialView("Details", it);
@@ -41,30 +41,30 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Create(Journal journal)
         {
             if (ModelState.IsValid)
             {
-                _journal_service.Add(journal);
-                _journal_service.Save();
+                _journalService.Add(journal);
+                _journalService.Save();
                 return RedirectToAction("Index");
             }
             return View(journal);
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Edit(int id)
         {
-            Journal comp = _journal_service.GetJournal(id);
-            _journal_service.Delete(id);
+            Journal comp = _journalService.GetJournal(id);
+            _journalService.Delete(id);
             if (comp != null)
             {
                 return PartialView("Edit", comp);
@@ -74,17 +74,17 @@ namespace Authentication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Edit(Journal journal)
         {
-            _journal_service.Add(journal);
+            _journalService.Add(journal);
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
-            Journal comp = _journal_service.GetJournal(id);
+            Journal comp = _journalService.GetJournal(id);
             if (comp != null)
             {
                 return PartialView("Delete", comp);
@@ -95,15 +95,19 @@ namespace Authentication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult DeleteRecord(int id)
         {
-            Journal comp = _journal_service.GetJournal(id);
+            Journal comp = _journalService.GetJournal(id);
 
             if (comp != null)
             {
-                _journal_service.Delete(id);
-                _journal_service.Save();
+                _journalService.Delete(id);
+                _journalService.Save();
+            }
+            else
+            {
+                return Content("<h2>Такого объекта е существует!</h2>");
             }
             return RedirectToAction("Index");
         }

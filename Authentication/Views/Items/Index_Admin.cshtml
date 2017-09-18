@@ -15,33 +15,36 @@
             <col style="width:100px" />
         </colgroup>
         <thead id="table_head">
-        <tr>
-            <th data-field="Name">Name</th>
-            <th data-field="Author">Author</th>
-            <th data-dield="Price">Price</th>
-            <th data-field="Type">Type</th>
-        </tr>
+            <tr>
+                <th data-field="Name">Name</th>
+                <th data-field="Author">Author</th>
+                <th data-dield="Price">Price</th>
+                <th data-field="Type">Type</th>
+                <th data-field="Delete">Delete</th>
+            </tr>
         </thead>
         <tbody id="table_data">
-        @foreach (var c in ViewBag.DataTable)
-        {
-            <tr>
-                <td>
-                    <p>@c.Name</p>
-                </td>
-                <td>
-                    <p>@c.Author</p>
-                </td>
-                <td>
-                    <p>@c.Price</p>
-                </td>
-                <td>
-                    <p>@c.Type</p>
-                </td>
-            </tr>
-        }
+            @foreach (var c in ViewBag.DataTable)
+            {
+                <tr>
+                    <td>
+                        <p>@c.Name</p>
+                    </td>
+                    <td>
+                        <p>@c.Author</p>
+                    </td>
+                    <td>
+                        <p>@c.Price</p>
+                    </td>
+                    <td>
+                        <p>@c.Type</p>
+                    </td>
+                    <td>
+                        <p><a class="btn" href="/Items/Delete/@c.Id">Удалить </a></p>
+                    </td>
+                </tr>
+            }
         </tbody>
-       
     </table>
 
     <script>
@@ -57,7 +60,7 @@
             $("#grid").kendoGrid({
                 height: 500,
                 sortable: true,
-               
+
             });
         });
     </script>
@@ -83,8 +86,3 @@
         });
     });
 </script>
-
-
-
-
-

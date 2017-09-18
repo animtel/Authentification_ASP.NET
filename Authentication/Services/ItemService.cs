@@ -9,45 +9,45 @@ namespace Authentication.Services
 {
     public class ItemSevice
     {
-        private IRepository<Item> _db_of_Items;
+        private IRepository<Item> _dbItems;
         public ItemSevice()
         {
-            _db_of_Items = new SQLItemRepository();
+            _dbItems = new SQLItemRepository();
         }
 
         public IEnumerable<Item> GetItemList()
         {
-            return _db_of_Items.GetItemList();
+            return _dbItems.GetItemList();
         }
 
         public Item GetBook(int id)
         {
-            return _db_of_Items.GetItem(id);
+            return _dbItems.GetItem(id);
         }
 
         public void Add(Item item)
         {
-            _db_of_Items.Create(item);
+            _dbItems.Create(item);
         }
 
         public void Update(Item item)
         {
-            _db_of_Items.Update(item);
+            _dbItems.Update(item);
         }
 
         public void Delete(int id)
         {
-            _db_of_Items.Delete(id);
+            _dbItems.Delete(id);
         }
 
         public void Save()
         {
-            _db_of_Items.Save();
+            _dbItems.Save();
         }
 
         public void Dispose()
         {
-            _db_of_Items.Dispose();
+            _dbItems.Dispose();
         }
     }
 }

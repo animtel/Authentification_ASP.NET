@@ -445,7 +445,7 @@ namespace Authentication.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("test", "Working");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

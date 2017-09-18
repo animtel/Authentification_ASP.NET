@@ -22,20 +22,6 @@ namespace Authentication.Controllers
                 ViewBag.roles = userManager.GetRoles(user.Id);
             return View(roles);
         }
-
-        [Authorize(Roles = "admin")]
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+        
     }
 }

@@ -5,26 +5,27 @@ using System.Web;
 using System.Web.Mvc;
 using Authentication.Models;
 using Authentication.Services;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace Authentication.Controllers
 {
     public class ItemsController : Controller
     {
-        private ItemSevice _item_service;
-        private JournalService _journal_service;
-        private BookService _book_service;
+        private ItemSevice _itemService;
+        private JournalService _journalService;
+        private BookService _bookService;
         public ItemsController()
         {
-            _item_service = new ItemSevice();
-            _book_service = new BookService();
-            _journal_service = new JournalService();
+            _itemService = new ItemSevice();
+            _bookService = new BookService();
+            _journalService = new JournalService();
         }
 
         public void DeletElements()
         {
-            for (int i = 0; i < _item_service.GetItemList().ToList().Count + 1; i++)
+            for (int i = 0; i < _itemService.GetItemList().ToList().Count + 1; i++)
             {
-                _item_service.Delete(i);
+                _itemService.Delete(i);
             }
         }
 
@@ -35,26 +36,80 @@ namespace Authentication.Controllers
             int id_of_items = 0;
             DeletElements();
 
-            foreach (var item in _book_service.GetBookList())
+            foreach (var item in _bookService.GetBookList())
             {
 
-                _item_service.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
+                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
 
             }
 
-            foreach (var item in _journal_service.GetJournalsList())
+            foreach (var item in _journalService.GetJournalsList())
             {
 
-                _item_service.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
+                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
 
             }
-            _item_service.Save();
+            _itemService.Save();
 
-            ViewBag.DataTable = _item_service.GetItemList();
+            ViewBag.DataTable = _itemService.GetItemList();
             return View();
         }
 
+        [Authorize(Roles = "user")]
+        public ActionResult Index_Admin()
+        {
+            int id_of_items = 0;
+            DeletElements();
 
+            foreach (var item in _bookService.GetBookList())
+            {
+
+                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
+
+            }
+
+            foreach (var item in _journalService.GetJournalsList())
+            {
+
+                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
+
+            }
+            _itemService.Save();
+
+            ViewBag.DataTable = _itemService.GetItemList();
+            return View();
+        }
+
+        [Authorize(Roles = "admin")]
+        public ActionResult Delete(int id)
+        {
+            Item comp = _itemService.GetBook(id);
+            if (comp != null)
+            {
+                return PartialView("Delete", comp);
+            }
+            return View("Index_Admin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        [Authorize(Roles = "admin")]
+        public ActionResult DeleteRecord(int id)
+        {
+            Item it = _itemService.GetBook(id);
+
+            if (it != null)
+            {
+                _bookService.Delete(id);
+                _bookService.Save();
+            }
+            else
+            {
+                return Content("<h2>Такого объекта е существует!</h2>");
+            }
+            return RedirectToAction("Index_Admin");
+        }
 
     }
 }

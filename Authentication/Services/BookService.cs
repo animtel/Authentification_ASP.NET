@@ -9,45 +9,45 @@ namespace Authentication.Services
 {
     public class BookService
     {
-        private IRepository<Book> _db_of_Books;
+        private IRepository<Book> _dbBooks;
         public BookService()
         {
-            _db_of_Books = new SQLBookRepository();
+            _dbBooks = new SQLBookRepository();
         }
 
         public IEnumerable<Book> GetBookList()
         {
-            return _db_of_Books.GetItemList();
+            return _dbBooks.GetItemList();
         }
 
         public Book GetBook(int id)
         {
-            return _db_of_Books.GetItem(id);
+            return _dbBooks.GetItem(id);
         }
 
         public void Add(Book book)
         {
-            _db_of_Books.Create(book);
+            _dbBooks.Create(book);
         }
 
         public void Update(Book book)
         {
-            _db_of_Books.Update(book);
+            _dbBooks.Update(book);
         }
 
         public void Delete(int id)
         {
-            _db_of_Books.Delete(id);
+            _dbBooks.Delete(id);
         }
 
         public void Save()
         {
-            _db_of_Books.Save();
+            _dbBooks.Save();
         }
 
         public void Dispose()
         {
-            _db_of_Books.Dispose();
+            _dbBooks.Dispose();
         }
 
 

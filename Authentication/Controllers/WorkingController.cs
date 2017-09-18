@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Authentication.Controllers
 {
@@ -11,12 +12,12 @@ namespace Authentication.Controllers
         [Authorize(Roles = "user")]
         public ActionResult test()
         {
-            List<string> all_items = new List<string>();
+            var all_items = new List<string>();
             all_items.Add("Journals");
             all_items.Add("Books");
             all_items.Add("All");
 
-            List<string> all_creates = new List<string>();
+            var all_creates = new List<string>();
             all_creates.Add("Journals");
             all_creates.Add("Books");
 
@@ -29,29 +30,34 @@ namespace Authentication.Controllers
         public ActionResult CreateItem()
         {
             string some = Request.Form["DropCreate"].ToString();
-            switch (some)
-            {
-                case "Books":
-                    return Redirect("~/Books/Create");
-                case "Journals":
-                    return Redirect("~/Journals/Create");
-            }
+
+            if (some == "Books") return Redirect("~/Books/Create");
+            if (some == "Journals") return Redirect("~/Journals/Create");
+
             return View("test");
         }
-
+        
+        
+        [Authorize]
         public ActionResult Drop()
         {
             string some = Request.Form["DropTypes"].ToString();
 
-            switch (some)
+            if (some == "Books") return Redirect("~/Books/Index");
+            if (some == "Journals") return Redirect("~/Journals/Index");
+            if (some == "All")
             {
-                case "Books":
-                    return Redirect("~/Books/Index");
-                case "Journals":
-                    return Redirect("~/Journals/Index");
-                case "All":
+                if (HttpContext.User.IsInRole("admin"))
+                {
+                    return Redirect("~/Items/Index_Admin");
+                }
+                if (HttpContext.User.IsInRole("user"))
+                {
                     return Redirect("~/Items/Index");
+                }
+                
             }
+
             return View("test");
         }
 

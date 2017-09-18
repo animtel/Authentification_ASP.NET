@@ -10,29 +10,29 @@ namespace Authentication.Controllers
 {
     public class BooksController : Controller
     {
-        private BookService book_service;
+        private BookService _bookService;
 
         public BooksController()
         {
-            book_service = new BookService();
+            _bookService = new BookService();
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Index()
         {
-            ViewBag.DataTable = book_service.GetBookList().ToList();
+            ViewBag.DataTable = _bookService.GetBookList().ToList();
 
             return View("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Details(int id)
         {
-            foreach (var item in book_service.GetBookList())
+            foreach (var item in _bookService.GetBookList())
             {
-                book_service.Add(item);
+                _bookService.Add(item);
             }
-            Book it = book_service.GetBook(id);
+            Book it = _bookService.GetBook(id);
             if (it != null)
             {
                 return PartialView("Details", it);
@@ -47,22 +47,22 @@ namespace Authentication.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Create(Book book)
         {
             if (ModelState.IsValid)
             {
-                book_service.Add(book);
-                book_service.Save();
+                _bookService.Add(book);
+                _bookService.Save();
                 return RedirectToAction("Index");
             }
             return View(book);
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Edit(int id)
         {
-            Book book = book_service.GetBook(id);
+            Book book = _bookService.GetBook(id);
             if (book != null)
             {
                 return PartialView("Edit", book);
@@ -72,17 +72,17 @@ namespace Authentication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Edit(Book book)
         {
-            book_service.Update(book);
+            _bookService.Update(book);
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
-            Book comp = book_service.GetBook(id);
+            Book comp = _bookService.GetBook(id);
             if (comp != null)
             {
                 return PartialView("Delete", comp);
@@ -93,15 +93,19 @@ namespace Authentication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
-        [Authorize(Roles = "user")]
+        [Authorize]
         public ActionResult DeleteRecord(int id)
         {
-            Book comp = book_service.GetBook(id);
+            Book comp = _bookService.GetBook(id);
 
             if (comp != null)
             {
-                book_service.Delete(id);
-                book_service.Save();
+                _bookService.Delete(id);
+                _bookService.Save();
+            }
+            else
+            {
+                return Content("<h2>Такого объекта е существует!</h2>");
             }
             return RedirectToAction("Index");
         }
