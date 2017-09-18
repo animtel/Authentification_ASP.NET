@@ -20,7 +20,7 @@ namespace Authentication.Services
             return _dbItems.GetItemList();
         }
 
-        public Item GetBook(int id)
+        public Item GetItem(int id)
         {
             return _dbItems.GetItem(id);
         }

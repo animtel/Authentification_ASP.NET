@@ -32,7 +32,10 @@
                         <p>
                             <a class="btn" href="/Journals/Details/@c.Id">Смотреть</a>
                             <a class="btn" href="/Journals/Edit/@c.Id">Редактировать </a>
-                            <a class="btn" href="/Journals/Delete/@c.Id">Удалить </a>
+                            @if (User.IsInRole("admin"))
+                             {
+                                <a class="btn" href="/Journals/Delete/@c.Id">Удалить </a>                                  
+                             }
 
                         </p>
                     </td>

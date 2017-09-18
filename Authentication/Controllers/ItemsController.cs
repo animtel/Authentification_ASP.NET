@@ -19,6 +19,7 @@ namespace Authentication.Controllers
             _itemService = new ItemSevice();
             _bookService = new BookService();
             _journalService = new JournalService();
+            DeletElements();
         }
 
         public void DeletElements()
@@ -55,40 +56,28 @@ namespace Authentication.Controllers
             return View();
         }
 
-        [Authorize(Roles = "user")]
-        public ActionResult Index_Admin()
+        [Authorize]
+        public ActionResult Details(int id)
         {
-            int id_of_items = 0;
-            DeletElements();
-
-            foreach (var item in _bookService.GetBookList())
+            
+            Item item = _itemService.GetItem(id);
+            if (item != null)
             {
-
-                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
-
+                return PartialView("Details", item);
             }
-
-            foreach (var item in _journalService.GetJournalsList())
-            {
-
-                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
-
-            }
-            _itemService.Save();
-
-            ViewBag.DataTable = _itemService.GetItemList();
-            return View();
+            return View("Index");
         }
+
 
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
-            Item comp = _itemService.GetBook(id);
+            Item comp = _itemService.GetItem(id);
             if (comp != null)
             {
                 return PartialView("Delete", comp);
             }
-            return View("Index_Admin");
+            return View("Index");
         }
 
         [HttpPost]
@@ -97,18 +86,18 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult DeleteRecord(int id)
         {
-            Item it = _itemService.GetBook(id);
+            Item it = _itemService.GetItem(id);
 
             if (it != null)
             {
-                _bookService.Delete(id);
-                _bookService.Save();
+                _itemService.Delete(id);
+                _itemService.Save();
             }
             else
             {
                 return Content("<h2>Такого объекта е существует!</h2>");
             }
-            return RedirectToAction("Index_Admin");
+            return RedirectToAction("Index");
         }
 
     }

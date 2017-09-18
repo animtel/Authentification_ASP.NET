@@ -45,18 +45,7 @@ namespace Authentication.Controllers
 
             if (some == "Books") return Redirect("~/Books/Index");
             if (some == "Journals") return Redirect("~/Journals/Index");
-            if (some == "All")
-            {
-                if (HttpContext.User.IsInRole("admin"))
-                {
-                    return Redirect("~/Items/Index_Admin");
-                }
-                if (HttpContext.User.IsInRole("user"))
-                {
-                    return Redirect("~/Items/Index");
-                }
-                
-            }
+            if (some == "All") return Redirect("~/Items/Index");
 
             return View("test");
         }

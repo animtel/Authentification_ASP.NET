@@ -20,6 +20,7 @@
             <th data-field="Author">Author</th>
             <th data-dield="Price">Price</th>
             <th data-field="Type">Type</th>
+            <th data-field="CRUD">CRUD</th>
         </tr>
         </thead>
         <tbody id="table_data">
@@ -38,6 +39,13 @@
                 <td>
                     <p>@c.Type</p>
                 </td>
+                <td>
+                    <a class="btn" href="/Items/Details/@c.Id">Смотреть</a>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a class="btn" href="/Items/Delete/@c.Id">Удалить</a>
+                    }
+                </td>
             </tr>
         }
         </tbody>
@@ -48,7 +56,7 @@
         function Table() {
             var target_head = $("#table_head");
             target_head.empty();
-            target_head.append("<tr><th data- field='Name'>Name</th><th data- field='Author'>Author</th><th data- field='Prce'>Price</th><th data- field='Type'>Type</th></tr >");
+            target_head.append("<tr><th data- field='Name'>Name</th><th data- field='Author'>Author</th><th data- field='Prce'>Price</th><th data- field='Type'>Type</th><th data-field='CRUD'>CRUD</th></tr >");
             var target_data = $("#table_data");
             target_data.empty();
         }

@@ -32,10 +32,10 @@ namespace Authentication.Controllers
             {
                 _bookService.Add(item);
             }
-            Book it = _bookService.GetBook(id);
-            if (it != null)
+            Book book = _bookService.GetBook(id);
+            if (book != null)
             {
-                return PartialView("Details", it);
+                return PartialView("Details", book);
             }
             return View("Index");
         }
@@ -82,10 +82,10 @@ namespace Authentication.Controllers
         [Authorize]
         public ActionResult Delete(int id)
         {
-            Book comp = _bookService.GetBook(id);
-            if (comp != null)
+            Book book = _bookService.GetBook(id);
+            if (book != null)
             {
-                return PartialView("Delete", comp);
+                return PartialView("Delete", book);
             }
             return View("Index");
         }

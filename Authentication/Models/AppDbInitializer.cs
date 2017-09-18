@@ -22,9 +22,13 @@ namespace RolesIdentityApp.Models
             roleManager.Create(role2);
 
             // создаем пользователей
-            var admin = new ApplicationUser { Email = "somemail@mail.ru", UserName = "somemail@mail.ru" };
+            var admin = new ApplicationUser { Email = "admin@mail.ru", UserName = "admin@mail.ru" };
             string password = "ad46D_ewr3";
             var result = userManager.Create(admin, password);
+
+            var user = new ApplicationUser {Email = "user@mail.ru", UserName = "user@mail.ru"};
+            string passwordUser = "ad46D_ewr3";
+            var res = userManager.Create(user, passwordUser);
 
             // если создание пользователя прошло успешно
             if (result.Succeeded)
@@ -32,6 +36,7 @@ namespace RolesIdentityApp.Models
                 // добавляем для пользователя роль
                 userManager.AddToRole(admin.Id, role1.Name);
                 userManager.AddToRole(admin.Id, role2.Name);
+                userManager.AddToRole(user.Id, role2.Name);
             }
 
             base.Seed(context);
