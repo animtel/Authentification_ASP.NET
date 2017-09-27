@@ -18,17 +18,25 @@ namespace Authentication.Repository
 
         public IEnumerable<Book> GetItemList()
         {
-            return _db.Books;
+            //return _db.Books;
+            
+            var some = _db.Books.SqlQuery("SELECT * FROM dbo.Books").ToList();
+            return some;
         }
 
         public Book GetItem(int id)
         {
-            return _db.Books.Find(id);
+            string query = $"SELECT * FROM dbo.Books WHERE id={id}";
+            var test = _db.Books.SqlQuery(query).ToList();
+            return test[0];
+            //return _db.Books.Find(id);
         }
 
         public void Create(Book book)
         {
-            _db.Books.Add(book);
+            string query = $"INSERT INTO dbo.Books VALUES({book.Id},{book.Name},{book.Author},{book.Price})";
+            _db.Books.SqlQuery(query);
+            //_db.Books.Add(book);
         }
 
         public void Update(Book book)
