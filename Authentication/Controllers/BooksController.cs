@@ -1,10 +1,15 @@
 ﻿using Authentication.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Serialization;
 using Authentication.Services;
+using Newtonsoft.Json;
 
 namespace Authentication.Controllers
 {
@@ -109,5 +114,75 @@ namespace Authentication.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public ActionResult Save(int id)
+        {
+            
+            Book book = _bookService.GetBook(id);
+
+            string serialized = JsonConvert.SerializeObject(book);
+
+            XmlSerializer formatter = new XmlSerializer(typeof(Book));
+
+            StringWriter stringWriter = new StringWriter();
+            formatter.Serialize(stringWriter, book);
+
+            DirectoryInfo dir = new DirectoryInfo(Server.MapPath($"~/Entities/{User.Identity.Name}"));
+            dir.Create();
+
+
+            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}.json"), serialized);
+            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}.xml"), stringWriter.ToString());
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Load()
+        {
+            return View("Load");
+        }
+        [HttpPost]
+        public ActionResult Load(HttpPostedFileBase load)
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(Book));
+            string fileName = System.IO.Path.GetFileName(load.FileName);
+
+            if (load != null)
+            {
+                // получаем имя файла
+                load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+            }
+
+            using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
+            {
+                Book book = (Book)formatter.Deserialize(fs);
+                _bookService.Add(book);
+
+            }
+            return RedirectToAction("Index");
+        }
+        //[HttpPost]
+        //public ActionResult Load(HttpPostedFileBase load)
+        //{
+
+        //    string fileName = System.IO.Path.GetFileName(load.FileName);
+
+        //    if (load != null)
+        //    {
+        //        // получаем имя файла
+        //        load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+        //    }
+
+        //    DataContractJsonSerializer jsonFormatter = new DataContractJsonSerializer(typeof(Book));
+
+        //    using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
+        //    {
+        //        Book book = (Book)jsonFormatter.ReadObject(fs);
+        //        _bookService.Add(book);
+        //    }
+
+        //    return RedirectToAction("Index");
+        //}
     }
 }

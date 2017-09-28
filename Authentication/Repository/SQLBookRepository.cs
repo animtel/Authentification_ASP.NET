@@ -34,8 +34,8 @@ namespace Authentication.Repository
 
         public void Create(Book book)
         {
-            string query = $"INSERT INTO dbo.Books VALUES({book.Id},{book.Name},{book.Author},{book.Price})";
-            _db.Books.SqlQuery(query);
+            string query = $"INSERT INTO dbo.Books (Id, Name, Author, Price) VALUES ({book.Id},{book.Name},{book.Author},{book.Price})";
+            var some = _db.Books.SqlQuery(query).ToList();
             //_db.Books.Add(book);
         }
 
@@ -46,9 +46,19 @@ namespace Authentication.Repository
 
         public void Delete(int id)
         {
+            string query = $"DELETE FROM dbo.Books WHERE Id={id}";
             Book book = _db.Books.Find(id);
-            if (book != null)
-                _db.Books.Remove(book);
+            try
+            {
+                if (book != null)
+                {
+                    var some = _db.Books.SqlQuery(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         public void Save()

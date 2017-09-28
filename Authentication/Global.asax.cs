@@ -18,6 +18,8 @@ namespace Authentication
             Database.SetInitializer<ApplicationDbContext>(new AppDbInitializer());
             Database.SetInitializer(new BookDbInitializer());
 
+
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
