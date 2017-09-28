@@ -18,6 +18,12 @@ namespace Authentication.Models
             db.Journales.Add(new Journal { Name = "Intes", Author = "Л. Толстой", Price = 450, Number = "3" });
             db.Journales.Add(new Journal { Name = "Ret", Author = "Л. Толстой", Price = 120, Number = "8" });
 
+            db.Brochures.Add(new Brochure {Id = 1, Name = "qwer", Color = "red", Theme = "ves", Price = 122});
+            db.Brochures.Add(new Brochure { Id = 2, Name = "Brochure", Color = "green", Theme = "gt", Price = 213 });
+            db.Brochures.Add(new Brochure { Id = 3, Name = "Int", Color = "blue", Theme = "asd", Price = 353 });
+            db.Brochures.Add(new Brochure { Id = 4, Name = "Double", Color = "some", Theme = "fgh", Price = 123 });
+            db.Brochures.Add(new Brochure { Id = 5, Name = "Decimal", Color = "ent", Theme = "hjk", Price = 865 });
+            db.Brochures.Add(new Brochure { Id = 6, Name = "heh", Color = "jjj", Theme = "kl", Price = 435 });
 
 
             db.Books.Add(new Book { Name = "Отцы и дети", Author = "И. Тургенев", Price = 180 });

@@ -31,12 +31,15 @@
                     <td>
                         <p>
                             <a class="btn" href="/Journals/Details/@c.Id">Смотреть</a>
-                            <a class="btn" href="/Journals/Edit/@c.Id">Редактировать </a>
+                            @if (User.IsInRole("admin") || User.IsInRole("user"))
+                            {
+                                <a class="btn" href="/Journals/Edit/@c.Id">Редактировать </a>
+                            }
                             @if (User.IsInRole("admin"))
                              {
                                 <a class="btn" href="/Journals/Delete/@c.Id">Удалить </a>                                  
                              }
-
+                            <a class="btn" href="/Journals/Save/@c.Id">Save</a>
                         </p>
                     </td>
                 </tr>

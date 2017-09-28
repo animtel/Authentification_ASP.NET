@@ -31,7 +31,7 @@ namespace Authentication.Controllers
         }
 
         // GET: Items
-        [Authorize(Roles = "user")]
+        //[Authorize(Roles = "user")]
         public ActionResult Index()
         {
             int id_of_items = 0;
@@ -56,7 +56,6 @@ namespace Authentication.Controllers
             return View();
         }
 
-        [Authorize]
         public ActionResult Details(int id)
         {
             

@@ -393,6 +393,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
+    <Compile Include="Controllers\BrochuresController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\JournalsController.cs" />
@@ -405,6 +406,7 @@
     <Compile Include="Models\AppDbInitializer.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookDbInitializer.cs" />
+    <Compile Include="Models\Brochure.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Journal.cs" />
@@ -413,9 +415,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\SQLBookRepository.cs" />
+    <Compile Include="Repository\SQLBrochureRepository.cs" />
     <Compile Include="Repository\SQLItemRepository.cs" />
     <Compile Include="Repository\SQLJournalRepository.cs" />
     <Compile Include="Services\BookService.cs" />
+    <Compile Include="Services\BrochureService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Services\JournalService.cs" />
     <Compile Include="Startup.cs" />
@@ -1214,6 +1218,13 @@
     <Content Include="Views\Items\Delete.cshtml" />
     <Content Include="Views\Items\Details.cshtml" />
     <Content Include="Views\Books\Load.cshtml" />
+    <Content Include="Views\Journals\Load.cshtml" />
+    <Content Include="Views\Brochures\Index.cshtml" />
+    <Content Include="Views\Brochures\Create.cshtml" />
+    <Content Include="Views\Brochures\Delete.cshtml" />
+    <Content Include="Views\Brochures\Details.cshtml" />
+    <Content Include="Views\Brochures\Edit.cshtml" />
+    <Content Include="Views\Brochures\Load.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

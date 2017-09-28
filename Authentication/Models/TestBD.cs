@@ -10,7 +10,7 @@ namespace Authentication.Models
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Journal> Journales { get; set; }
-
+        public DbSet<Brochure> Brochures { get; set; }
 
         public DbSet<Item> Items { get; set; }
     }

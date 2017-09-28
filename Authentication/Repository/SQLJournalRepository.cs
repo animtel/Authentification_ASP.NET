@@ -19,29 +19,44 @@ namespace Authentication.Repository
 
         public IEnumerable<Journal> GetItemList()
         {
-            return _db.Journales;
+            var some = _db.Journales.SqlQuery("SELECT * FROM dbo.Journales").ToList();
+            return some;
         }
 
         public Journal GetItem(int id)
         {
-            return _db.Journales.Find(id);
+            string query = $"SELECT * FROM dbo.Journales WHERE id={id}";
+            var item = _db.Journales.SqlQuery(query).ToList()[0];
+            return item;
         }
 
         public void Create(Journal journal)
         {
-            _db.Journales.Add(journal);
+            string query = $"INSERT INTO dbo.Books VALUES ({journal.Id},{journal.Name},{journal.Author},{journal.Number},{journal.Price})";
+            var some = _db.Journales.SqlQuery(query);
         }
 
         public void Update(Journal journal)
         {
-            _db.Entry(journal).State = EntityState.Modified;
+            string query = $"UPDATE dbo.Journales SET Id = {journal.Id}, Name = {journal.Name}, Author = {journal.Author} , Number = {journal.Number} , Price = {journal.Price}";
+            _db.Books.SqlQuery(query).ToList();
         }
 
         public void Delete(int id)
         {
             Journal journal = _db.Journales.Find(id);
-            if (journal != null)
-                _db.Journales.Remove(journal);
+            string query = $"DELETE FROM dbo.Journales WHERE Id={id}";
+            try
+            {
+                if (journal != null)
+                {
+                    var some = _db.Journales.SqlQuery(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public void Save()

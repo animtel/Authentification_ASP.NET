@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Authentication.Models.Book>
+﻿@model IEnumerable<Authentication.Models.Brochure>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>List of books</h2>
+<h2>List of brochures</h2>
 <div id="example">
     <table id="grid">
         <colgroup>
@@ -28,18 +28,18 @@
                     </td>
                     <td>
                         <p>
-                            <a class="btn" href="/Books/Details/@c.Id">Смотреть</a>
+                            <a class="btn" href="/Brochures/Details/@c.Id">Смотреть</a>
 
                             @if (User.IsInRole("admin") || User.IsInRole("user"))
-                             {
-                                <a class="btn" href="/Books/Edit/@c.Id">Редактировать </a>
-                             }
+                            {
+                                <a class="btn" href="/Brochures/Edit/@c.Id">Редактировать </a>
+                            }
 
                             @if (User.IsInRole("admin"))
-                             {
-                                <a class="btn" href="/Books/Delete/@c.Id">Удалить </a>
-                             }
-                            <a class="btn" href="/Books/Save/@c.Id">Save</a>
+                            {
+                                <a class="btn" href="/Brochures/Delete/@c.Id">Удалить </a>
+                            }
+                            <a class="btn" href="/Brochures/Save/@c.Id">Save</a>
 
                         </p>
                     </td>

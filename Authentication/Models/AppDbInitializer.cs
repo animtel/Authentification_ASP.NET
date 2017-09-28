@@ -16,10 +16,12 @@ namespace RolesIdentityApp.Models
             // создаем две роли
             var role1 = new IdentityRole { Name = "admin" };
             var role2 = new IdentityRole { Name = "user" };
+            var role3 = new IdentityRole{ Name = "guest" };
 
             // добавляем роли в бд
             roleManager.Create(role1);
             roleManager.Create(role2);
+            roleManager.Create(role3);
 
             // создаем пользователей
             var admin = new ApplicationUser { Email = "admin@mail.ru", UserName = "admin@mail.ru" };
@@ -29,6 +31,9 @@ namespace RolesIdentityApp.Models
             var user = new ApplicationUser {Email = "user@mail.ru", UserName = "user@mail.ru"};
             string passwordUser = "ad46D_ewr3";
             var res = userManager.Create(user, passwordUser);
+
+            var guest = new ApplicationUser {Email = "guest@mail.ru", UserName = "guest@mail.ru"};
+            string passwordGuest = "ad46D_ewr3";
 
             // если создание пользователя прошло успешно
             if (result.Succeeded)

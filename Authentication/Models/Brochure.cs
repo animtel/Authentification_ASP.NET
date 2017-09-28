@@ -8,16 +8,16 @@ namespace Authentication.Models
 {
     [Serializable]
     [XmlRoot(ElementName = ("Document"))]
-    public class Journal
+    public class Brochure
     {
         [XmlElement(ElementName = "Id")]
         public int Id { get; set; }
         [XmlElement(ElementName = "Name")]
         public string Name { get; set; }
-        [XmlElement(ElementName = "Author")]
-        public string Author { get; set; }
-        [XmlElement(ElementName = "Number")]
-        public string Number { get; set; }
+        [XmlElement(ElementName = "Theme")]
+        public string Theme { get; set; }
+        [XmlElement(ElementName = "Color")]
+        public string Color { get; set; }
         [XmlElement(ElementName = "Price")]
         public int Price { get; set; }
     }

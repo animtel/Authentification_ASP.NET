@@ -1,75 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Authentication.Models;
 
 namespace Authentication.Repository
 {
-    public class SQLBookRepository : IRepository<Book>
+    public class SQLBrochureRepository : IRepository<Brochure>
     {
         private TestBD _db;
 
-        public SQLBookRepository()
+        public SQLBrochureRepository()
         {
             this._db = new TestBD();
         }
 
-        public IEnumerable<Book> GetItemList()
+        public IEnumerable<Brochure> GetItemList()
         {
             //return _db.Books;
-            
-            var some = _db.Books.SqlQuery("SELECT * FROM dbo.Books").ToList();
+
+            var some = _db.Brochures.SqlQuery("SELECT * FROM dbo.Brochures").ToList();
             return some;
         }
 
-        public Book GetItem(int id)
+        public Brochure GetItem(int id)
         {
-            string query = $"SELECT * FROM dbo.Books WHERE id={id}";
-            var item = _db.Books.SqlQuery(query).ToList()[0];
+            string query = $"SELECT * FROM dbo.Brochures WHERE id={id}";
+            var item = _db.Brochures.SqlQuery(query).ToList()[0];
             return item;
             //return _db.Books.Find(id);
         }
 
-        public void Create(Book book)
+        public void Create(Brochure brochure)
         {
-            string query = $"INSERT INTO Books (Id,Name,Author,Price) VALUES ({book.Id}, {book.Name}, {book.Author}, {book.Price})";
-            try
-            {
-                _db.Books.SqlQuery(query);
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            string query = $"INSERT INTO dbo.Books VALUES ({brochure.Id},{brochure.Name},{brochure.Color},{brochure.Theme},{brochure.Price})";
+            var some = _db.Brochures.SqlQuery(query);
             //_db.Books.Add(book);
         }
 
-        public void Update(Book book)
+        public void Update(Brochure brochure)
         {
-            string query = $"UPDATE Student SET Id = {book.Id}, Name = {book.Name}, Author = {book.Author}, Price = {book.Price}";
-            _db.Books.SqlQuery(query).ToList();
+            string query = $"UPDATE dbo.Brochures SET Id = {brochure.Id}, Name = {brochure.Name}, Color = {brochure.Color}, Theme = {brochure.Theme},Price = {brochure.Price}";
+            _db.Brochures.SqlQuery(query);
             //_db.Entry(book).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            string query = $"DELETE FROM dbo.Books WHERE Id={id}";
-            Book book = _db.Books.Find(id);
+            string query = $"DELETE FROM dbo.Brochures WHERE Id = {id}";
+            Brochure brochure = _db.Brochures.Find(id);
             try
             {
-                if (book != null)
+                if (brochure != null)
                 {
-                    var some = _db.Books.SqlQuery(query).ToList();
+                    var some = _db.Brochures.SqlQuery(query).ToList();
                 }
             }
             catch (Exception ex)
             {
-
+                
             }
-
-
         }
 
         public void Save()

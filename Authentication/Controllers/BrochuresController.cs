@@ -1,44 +1,43 @@
-﻿using Authentication.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
+using Authentication.Models;
 using Authentication.Services;
 using Newtonsoft.Json;
 
 namespace Authentication.Controllers
 {
-    public class BooksController : Controller
+    public class BrochuresController : Controller
     {
-        private BookService _bookService;
+        private BrochureService _brochureService;
 
-        public BooksController()
+        public BrochuresController()
         {
-            _bookService = new BookService();
+            _brochureService = new BrochureService();
         }
 
         public ActionResult Index()
         {
-            ViewBag.DataTable = _bookService.GetBookList().ToList();
+            ViewBag.DataTable = _brochureService.GetBrochureList().ToList();
 
             return View("Index");
         }
 
         public ActionResult Details(int id)
         {
-            foreach (var item in _bookService.GetBookList())
+            foreach (var item in _brochureService.GetBrochureList())
             {
-                _bookService.Add(item);
+                _brochureService.Add(item);
             }
-            Book book = _bookService.GetBook(id);
-            if (book != null)
+            Brochure brochure = _brochureService.GetBrochure(id);
+            if (brochure != null)
             {
-                return PartialView("Details", book);
+                return PartialView("Details", brochure);
             }
             return View("Index");
         }
@@ -51,24 +50,24 @@ namespace Authentication.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult Create(Book book)
+        public ActionResult Create(Brochure brochure)
         {
             if (ModelState.IsValid)
             {
-                _bookService.Add(book);
-                _bookService.Save();
+                _brochureService.Add(brochure);
+                _brochureService.Save();
                 return RedirectToAction("Index");
             }
-            return View(book);
+            return View(brochure);
         }
 
         [Authorize]
         public ActionResult Edit(int id)
         {
-            Book book = _bookService.GetBook(id);
-            if (book != null)
+            Brochure brochure = _brochureService.GetBrochure(id);
+            if (brochure != null)
             {
-                return PartialView("Edit", book);
+                return PartialView("Edit", brochure);
             }
             return View("Index");
         }
@@ -76,19 +75,19 @@ namespace Authentication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Edit(Book book)
+        public ActionResult Edit(Brochure brochure)
         {
-            _bookService.Update(book);
+            _brochureService.Update(brochure);
             return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
-            Book book = _bookService.GetBook(id);
-            if (book != null)
+            Brochure brochure = _brochureService.GetBrochure(id);
+            if (brochure != null)
             {
-                return PartialView("Delete", book);
+                return PartialView("Delete", brochure);
             }
             return View("Index");
         }
@@ -99,12 +98,12 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult DeleteRecord(int id)
         {
-            Book comp = _bookService.GetBook(id);
+            Brochure comp = _brochureService.GetBrochure(id);
 
             if (comp != null)
             {
-                _bookService.Delete(id);
-                _bookService.Save();
+                _brochureService.Delete(id);
+                _brochureService.Save();
             }
             else
             {
@@ -115,22 +114,22 @@ namespace Authentication.Controllers
 
         public ActionResult Save(int id)
         {
-            
-            Book book = _bookService.GetBook(id);
 
-            string serialized = JsonConvert.SerializeObject(book);
+            Brochure brochure = _brochureService.GetBrochure(id);
 
-            XmlSerializer formatter = new XmlSerializer(typeof(Book));
+            string serialized = JsonConvert.SerializeObject(brochure);
+
+            XmlSerializer formatter = new XmlSerializer(typeof(Brochure));
 
             StringWriter stringWriter = new StringWriter();
-            formatter.Serialize(stringWriter, book);
+            formatter.Serialize(stringWriter, brochure);
 
             DirectoryInfo dir = new DirectoryInfo(Server.MapPath($"~/Entities/{User.Identity.Name}"));
             dir.Create();
 
 
-            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json"), serialized);
-            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.xml"), stringWriter.ToString());
+            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_brochure.json"), serialized);
+            System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_brochure.xml"), stringWriter.ToString());
 
             return RedirectToAction("Index");
         }
@@ -140,12 +139,11 @@ namespace Authentication.Controllers
         {
             return View("Load");
         }
-
         [HttpPost]
 
         public ActionResult Load(HttpPostedFileBase load)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(Book));
+            XmlSerializer formatter = new XmlSerializer(typeof(Brochure));
             string fileName = System.IO.Path.GetFileName(load.FileName);
 
             if (load != null)
@@ -156,8 +154,8 @@ namespace Authentication.Controllers
 
             using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
             {
-                Book book = (Book)formatter.Deserialize(fs);
-                _bookService.Add(book);
+                Brochure brochure= (Brochure)formatter.Deserialize(fs);
+                _brochureService.Add(brochure);
 
             }
             return RedirectToAction("Index");
