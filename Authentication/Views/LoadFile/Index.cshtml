@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Authentication.Models.Item>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="test-page">
+    <form method="post" action="/LoadFile/Drop">
+        <p>
+            
+            @Html.DropDownList("DropTypes", new SelectList(ViewBag.AllChoise))
+            <button type="submit" class="btn btn-primary" value="Отправить">Отправить</button>
+        </p>
+    </form>
+
+</div>
+
+
+
+
+
+
+
+
+

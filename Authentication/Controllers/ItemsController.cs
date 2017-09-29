@@ -14,11 +14,13 @@ namespace Authentication.Controllers
         private ItemSevice _itemService;
         private JournalService _journalService;
         private BookService _bookService;
+        private BrochureService _brochureService;
         public ItemsController()
         {
             _itemService = new ItemSevice();
             _bookService = new BookService();
             _journalService = new JournalService();
+            _brochureService = new BrochureService();
             DeletElements();
         }
 
@@ -30,28 +32,26 @@ namespace Authentication.Controllers
             }
         }
 
-        // GET: Items
-        //[Authorize(Roles = "user")]
+        
         public ActionResult Index()
         {
-            int id_of_items = 0;
-            DeletElements();
+            int id_of_items = 1;
+            //DeletElements();
 
-            foreach (var item in _bookService.GetBookList())
+            
+            foreach (var item in _brochureService.GetBrochureList())
             {
-
-                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
-
+                _itemService.Add(new Item{Id = id_of_items++, Name = item.Name, Author = "-", Price = item.Price, Number = "-", Type = "Brochure"});
             }
-
             foreach (var item in _journalService.GetJournalsList())
             {
-
                 _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
-
+            }
+            foreach (var item in _bookService.GetBookList())
+            {
+                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
             }
             _itemService.Save();
-
             ViewBag.DataTable = _itemService.GetItemList();
             return View();
         }

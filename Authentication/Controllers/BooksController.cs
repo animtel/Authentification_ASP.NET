@@ -7,10 +7,11 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using System.Xml.Serialization;
 using Authentication.Services;
 using Newtonsoft.Json;
-
+//сделать сериализацию и десериализацию объектов. Фикс создание через запрос. Переделать репозиторий журнал. (Подять бд)
 namespace Authentication.Controllers
 {
     public class BooksController : Controller
@@ -31,10 +32,10 @@ namespace Authentication.Controllers
 
         public ActionResult Details(int id)
         {
-            foreach (var item in _bookService.GetBookList())
-            {
-                _bookService.Add(item);
-            }
+            //foreach (var item in _bookService.GetBookList())
+            //{
+            //    _bookService.Add(item);
+            //}
             Book book = _bookService.GetBook(id);
             if (book != null)
             {
@@ -119,7 +120,7 @@ namespace Authentication.Controllers
             Book book = _bookService.GetBook(id);
 
             string serialized = JsonConvert.SerializeObject(book);
-
+            
             XmlSerializer formatter = new XmlSerializer(typeof(Book));
 
             StringWriter stringWriter = new StringWriter();
@@ -153,36 +154,34 @@ namespace Authentication.Controllers
                 // получаем имя файла
                 load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
             }
+            char some = Convert.ToChar(fileName[fileName.Length-1]);
+            if(some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
+            if(some == 'l') DeserializeXML(fileName);
 
-            using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
-            {
-                Book book = (Book)formatter.Deserialize(fs);
-                _bookService.Add(book);
-
-            }
             return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //public ActionResult Load(HttpPostedFileBase load)
-        //{
 
-        //    string fileName = System.IO.Path.GetFileName(load.FileName);
+        public void DeserializeJSON(string fileName)
+        {
+            string deserialize = System.IO.File.ReadAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
 
-        //    if (load != null)
-        //    {
-        //        // получаем имя файла
-        //        load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
-        //    }
+            Book test = JsonConvert.DeserializeObject<Book>(deserialize);
+            _bookService.Add(test);
+            _bookService.Save();
 
-        //    DataContractJsonSerializer jsonFormatter = new DataContractJsonSerializer(typeof(Book));
+            
+        }
 
-        //    using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
-        //    {
-        //        Book book = (Book)jsonFormatter.ReadObject(fs);
-        //        _bookService.Add(book);
-        //    }
+        public void DeserializeXML(string fileName)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Book));
 
-        //    return RedirectToAction("Index");
-        //}
+            StreamReader reader = new StreamReader(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+            Book test = (Book)serializer.Deserialize(reader);
+            reader.Close();
+            _bookService.Add(test);
+            _bookService.Save();
+        }
+        
     }
 }

@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using Authentication.Models;
+using Dapper;
 
 namespace Authentication.Repository
 {
     public class SQLBookRepository : IRepository<Book>
     {
         private TestBD _db;
+        string connectionString = ConfigurationManager.ConnectionStrings["BooksStore"].ConnectionString;
 
         public SQLBookRepository()
         {
@@ -19,54 +24,51 @@ namespace Authentication.Repository
         public IEnumerable<Book> GetItemList()
         {
             //return _db.Books;
-            
-            var some = _db.Books.SqlQuery("SELECT * FROM dbo.Books").ToList();
-            return some;
+            var books = new List<Book>();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                books = db.Query<Book>("SELECT * FROM Books").ToList();
+            }
+            return books;
         }
 
         public Book GetItem(int id)
         {
-            string query = $"SELECT * FROM dbo.Books WHERE id={id}";
-            var item = _db.Books.SqlQuery(query).ToList()[0];
-            return item;
-            //return _db.Books.Find(id);
+            Book book = null;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                book = db.Query<Book>("SELECT * FROM dbo.Books WHERE Id = @id", new { id }).FirstOrDefault();
+            }
+            return book;
         }
 
         public void Create(Book book)
         {
-            string query = $"INSERT INTO Books (Id,Name,Author,Price) VALUES ({book.Id}, {book.Name}, {book.Author}, {book.Price})";
-            try
+            Delete(book.Id);
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                _db.Books.SqlQuery(query);
+                var sqlQuery = "SET IDENTITY_INSERT Books ON; INSERT INTO dbo.Books (Id, Name, Author, Price) VALUES(@Id, @Name, @Author, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Books OFF";
+                int bookId = db.Query<int>(sqlQuery, book).FirstOrDefault();
+                book.Id = bookId;
             }
-            catch (Exception ex)
-            {
-                
-            }
-            //_db.Books.Add(book);
+            
         }
 
         public void Update(Book book)
         {
-            string query = $"UPDATE Student SET Id = {book.Id}, Name = {book.Name}, Author = {book.Author}, Price = {book.Price}";
-            _db.Books.SqlQuery(query).ToList();
-            //_db.Entry(book).State = EntityState.Modified;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "UPDATE dbo.Books SET Name = @Name, Author = @Author, Price = @Price WHERE Id = @Id";
+                db.Execute(sqlQuery, book);
+            }
         }
 
         public void Delete(int id)
         {
-            string query = $"DELETE FROM dbo.Books WHERE Id={id}";
-            Book book = _db.Books.Find(id);
-            try
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                if (book != null)
-                {
-                    var some = _db.Books.SqlQuery(query).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-
+                var sqlQuery = "DELETE FROM dbo.Books WHERE Id = @id";
+                db.Execute(sqlQuery, new { id });
             }
 
 

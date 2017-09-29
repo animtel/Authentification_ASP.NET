@@ -151,36 +151,34 @@ namespace Authentication.Controllers
                 // получаем имя файла
                 load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
             }
+            char some = Convert.ToChar(fileName[fileName.Length - 1]);
+            if (some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
+            if (some == 'l') DeserializeXML(fileName);
 
-            using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
-            {
-                Brochure brochure= (Brochure)formatter.Deserialize(fs);
-                _brochureService.Add(brochure);
-
-            }
             return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //public ActionResult Load(HttpPostedFileBase load)
-        //{
 
-        //    string fileName = System.IO.Path.GetFileName(load.FileName);
+        public void DeserializeJSON(string fileName)
+        {
+            string deserialize = System.IO.File.ReadAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
 
-        //    if (load != null)
-        //    {
-        //        // получаем имя файла
-        //        load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
-        //    }
+            Brochure test = JsonConvert.DeserializeObject<Brochure>(deserialize);
+            _brochureService.Add(test);
+            _brochureService.Save();
 
-        //    DataContractJsonSerializer jsonFormatter = new DataContractJsonSerializer(typeof(Book));
 
-        //    using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
-        //    {
-        //        Book book = (Book)jsonFormatter.ReadObject(fs);
-        //        _bookService.Add(book);
-        //    }
+        }
 
-        //    return RedirectToAction("Index");
-        //}
+        public void DeserializeXML(string fileName)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Brochure));
+
+            StreamReader reader = new StreamReader(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+            Brochure test = (Brochure)serializer.Deserialize(reader);
+            reader.Close();
+            _brochureService.Add(test);
+            _brochureService.Save();
+        }
+        
     }
 }

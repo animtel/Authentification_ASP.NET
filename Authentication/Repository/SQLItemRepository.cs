@@ -1,16 +1,22 @@
 ﻿using Authentication.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Authentication.Repository
 {
     public class SQLItemRepository : IRepository<Item>
     {
         private TestBD _db;
+
+        string connectionString = ConfigurationManager.ConnectionStrings["BooksStore"].ConnectionString;
 
         public SQLItemRepository()
         {
@@ -19,30 +25,55 @@ namespace Authentication.Repository
 
         public IEnumerable<Item> GetItemList()
         {
-            return _db.Items;
+            //return _db.Books;
+            var items = new List<Item>();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                items = db.Query<Item>("SELECT * FROM Items").ToList();
+            }
+            return items;
         }
 
         public Item GetItem(int id)
         {
-            return _db.Items.Find(id);
+            Item item = null;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                item = db.Query<Item>("SELECT * FROM Items WHERE Id = @id", new { id }).FirstOrDefault();
+            }
+            return item;
         }
 
         public void Create(Item item)
         {
-            _db.Items.Add(item);
+            Delete(item.Id);
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "SET IDENTITY_INSERT Items ON; INSERT INTO Items (Id, Name, Author, Price, Number, Type) VALUES(@Id, @Name, @Author, @Price, @Number, @Type); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Items OFF";
+                int itemId = db.Query<int>(sqlQuery, item).FirstOrDefault();
+                item.Id = itemId;
+            }
+
         }
 
-        public void Update(Item paper)
+        public void Update(Item item)
         {
-            _db.Entry(paper).State = EntityState.Modified;
-            _db.SaveChanges();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "UPDATE Items SET Name = @Name, Author = @Author, Price = @Price, Number=@Number, Type=@Type WHERE Id = @Id";
+                db.Execute(sqlQuery, item);
+            }
         }
 
         public void Delete(int id)
         {
-            Item paper = _db.Items.Find(id);
-            if (paper != null)
-                _db.Items.Remove(paper);
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "DELETE FROM Items WHERE Id = @id";
+                db.Execute(sqlQuery, new { id });
+            }
+
+
         }
 
         public void Save()

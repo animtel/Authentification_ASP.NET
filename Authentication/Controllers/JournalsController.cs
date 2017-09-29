@@ -31,10 +31,6 @@ namespace Authentication.Controllers
 
         public ActionResult Details(int id)
         {
-            foreach (var item in _journalService.GetJournalsList())
-            {
-                _journalService.Add(item);
-            }
             Journal it = _journalService.GetJournal(id);
             if (it != null)
             {
@@ -63,7 +59,6 @@ namespace Authentication.Controllers
         public ActionResult Edit(int id)
         {
             Journal comp = _journalService.GetJournal(id);
-            _journalService.Delete(id);
             if (comp != null)
             {
                 return PartialView("Edit", comp);
@@ -145,17 +140,35 @@ namespace Authentication.Controllers
 
             if (load != null)
             {
-                // получаем имя файла
                 load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
             }
+            char some = Convert.ToChar(fileName[fileName.Length - 1]);
+            if (some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
+            if (some == 'l') DeserializeXML(fileName);
 
-            using (FileStream fs = new FileStream(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName), FileMode.OpenOrCreate))
-            {
-                Journal journal = (Journal)formatter.Deserialize(fs);
-                _journalService.Add(journal);
-
-            }
             return RedirectToAction("Index");
+        }
+
+        public void DeserializeJSON(string fileName)
+        {
+            string deserialize = System.IO.File.ReadAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+
+            Journal test = JsonConvert.DeserializeObject<Journal>(deserialize);
+            _journalService.Add(test);
+            _journalService.Save();
+
+
+        }
+
+        public void DeserializeXML(string fileName)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Journal));
+
+            StreamReader reader = new StreamReader(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+            Journal test = (Journal)serializer.Deserialize(reader);
+            reader.Close();
+            _journalService.Add(test);
+            _journalService.Save();
         }
     }
 }

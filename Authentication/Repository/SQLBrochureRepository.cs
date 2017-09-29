@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using Authentication.Models;
+using Dapper;
 
 namespace Authentication.Repository
 {
     public class SQLBrochureRepository : IRepository<Brochure>
     {
         private TestBD _db;
+        string connectionString = ConfigurationManager.ConnectionStrings["BooksStore"].ConnectionString;
 
         public SQLBrochureRepository()
         {
@@ -18,48 +23,54 @@ namespace Authentication.Repository
         public IEnumerable<Brochure> GetItemList()
         {
             //return _db.Books;
-
-            var some = _db.Brochures.SqlQuery("SELECT * FROM dbo.Brochures").ToList();
-            return some;
+            var brochure = new List<Brochure>();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                brochure = db.Query<Brochure>("SELECT * FROM Brochures").ToList();
+            }
+            return brochure;
         }
 
         public Brochure GetItem(int id)
         {
-            string query = $"SELECT * FROM dbo.Brochures WHERE id={id}";
-            var item = _db.Brochures.SqlQuery(query).ToList()[0];
-            return item;
-            //return _db.Books.Find(id);
+            Brochure brochure = null;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                brochure = db.Query<Brochure>("SELECT * FROM Brochures WHERE Id = @id", new { id }).FirstOrDefault();
+            }
+            return brochure;
         }
 
         public void Create(Brochure brochure)
         {
-            string query = $"INSERT INTO dbo.Books VALUES ({brochure.Id},{brochure.Name},{brochure.Color},{brochure.Theme},{brochure.Price})";
-            var some = _db.Brochures.SqlQuery(query);
-            //_db.Books.Add(book);
+            Delete(brochure.Id);
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "SET IDENTITY_INSERT Brochures ON; INSERT INTO Brochures (Id, Name, Theme, Color, Price) VALUES(@Id, @Name, @Theme, @Color, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT BROCHURES OFF";
+                int brochureId = db.Query<int>(sqlQuery, brochure).FirstOrDefault();
+                brochure.Id = brochureId;
+            }
+
         }
 
         public void Update(Brochure brochure)
         {
-            string query = $"UPDATE dbo.Brochures SET Id = {brochure.Id}, Name = {brochure.Name}, Color = {brochure.Color}, Theme = {brochure.Theme},Price = {brochure.Price}";
-            _db.Brochures.SqlQuery(query);
-            //_db.Entry(book).State = EntityState.Modified;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "UPDATE Brochures SET Name = @Name, Theme = @Theme, Color = @Color WHERE Id = @Id";
+                db.Execute(sqlQuery, brochure);
+            }
         }
 
         public void Delete(int id)
         {
-            string query = $"DELETE FROM dbo.Brochures WHERE Id = {id}";
-            Brochure brochure = _db.Brochures.Find(id);
-            try
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                if (brochure != null)
-                {
-                    var some = _db.Brochures.SqlQuery(query).ToList();
-                }
+                var sqlQuery = "DELETE FROM brochures WHERE Id = @id";
+                db.Execute(sqlQuery, new { id });
             }
-            catch (Exception ex)
-            {
-                
-            }
+
+
         }
 
         public void Save()

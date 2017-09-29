@@ -1,16 +1,22 @@
 ﻿using Authentication.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Authentication.Repository
 {
     public class SQLJournalRepository : IRepository<Journal>
     {
         private TestBD _db;
+
+        string connectionString = ConfigurationManager.ConnectionStrings["BooksStore"].ConnectionString;
 
         public SQLJournalRepository()
         {
@@ -19,44 +25,54 @@ namespace Authentication.Repository
 
         public IEnumerable<Journal> GetItemList()
         {
-            var some = _db.Journales.SqlQuery("SELECT * FROM dbo.Journales").ToList();
-            return some;
+            var journals = new List<Journal>();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                journals = db.Query<Journal>("SELECT * FROM Journales").ToList();
+            }
+            return journals;
         }
 
         public Journal GetItem(int id)
         {
-            string query = $"SELECT * FROM dbo.Journales WHERE id={id}";
-            var item = _db.Journales.SqlQuery(query).ToList()[0];
-            return item;
+            Journal journal = null;
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                journal = db.Query<Journal>("SELECT * FROM Journales WHERE Id = @id", new { id }).FirstOrDefault();
+            }
+            return journal;
         }
 
         public void Create(Journal journal)
         {
-            string query = $"INSERT INTO dbo.Books VALUES ({journal.Id},{journal.Name},{journal.Author},{journal.Number},{journal.Price})";
-            var some = _db.Journales.SqlQuery(query);
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                Delete(journal.Id);
+                var sqlQuery = "SET IDENTITY_INSERT Journales ON; INSERT INTO Journales (Id, Name, Author, Number, Price) VALUES(@Id, @Name, @Author, @Number, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Journales OFF";
+                int journalId = db.Query<int>(sqlQuery, journal).FirstOrDefault();
+                journal.Id = journalId;
+            }
+
         }
 
         public void Update(Journal journal)
         {
-            string query = $"UPDATE dbo.Journales SET Id = {journal.Id}, Name = {journal.Name}, Author = {journal.Author} , Number = {journal.Number} , Price = {journal.Price}";
-            _db.Books.SqlQuery(query).ToList();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "UPDATE Journales SET Name = @Name, Author = @Author, Number = @Number, Price = @Price WHERE Id = @Id";
+                db.Execute(sqlQuery, journal);
+            }
         }
 
         public void Delete(int id)
         {
-            Journal journal = _db.Journales.Find(id);
-            string query = $"DELETE FROM dbo.Journales WHERE Id={id}";
-            try
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                if (journal != null)
-                {
-                    var some = _db.Journales.SqlQuery(query).ToList();
-                }
+                var sqlQuery = "DELETE FROM Journales WHERE Id = @id";
+                db.Execute(sqlQuery, new { id });
             }
-            catch (Exception ex)
-            {
 
-            }
+
         }
 
         public void Save()
