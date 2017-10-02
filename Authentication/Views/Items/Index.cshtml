@@ -41,10 +41,6 @@
                 </td>
                 <td>
                     <a class="btn" href="/Items/Details/@c.Id">Смотреть</a>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <a class="btn" href="/Items/Delete/@c.Id">Удалить</a>
-                    }
                 </td>
             </tr>
         }

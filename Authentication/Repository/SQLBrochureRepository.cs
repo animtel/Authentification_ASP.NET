@@ -43,10 +43,9 @@ namespace Authentication.Repository
 
         public void Create(Brochure brochure)
         {
-            Delete(brochure.Id);
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "SET IDENTITY_INSERT Brochures ON; INSERT INTO Brochures (Id, Name, Theme, Color, Price) VALUES(@Id, @Name, @Theme, @Color, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT BROCHURES OFF";
+                var sqlQuery = "INSERT INTO Brochures VALUES(@Name, @Theme, @Color, @Price)";
                 int brochureId = db.Query<int>(sqlQuery, brochure).FirstOrDefault();
                 brochure.Id = brochureId;
             }

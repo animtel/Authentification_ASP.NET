@@ -9,7 +9,7 @@ namespace Authentication.Services
 {
     public class ItemSevice
     {
-        private IRepository<Item> _dbItems;
+        private SQLItemRepository _dbItems;
         public ItemSevice()
         {
             _dbItems = new SQLItemRepository();
@@ -33,6 +33,11 @@ namespace Authentication.Services
         public void Update(Item item)
         {
             _dbItems.Update(item);
+        }
+
+        public void DeleteAll()
+        {
+            _dbItems.DeleteAll();
         }
 
         public void Delete(int id)

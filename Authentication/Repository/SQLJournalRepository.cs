@@ -47,13 +47,13 @@ namespace Authentication.Repository
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                Delete(journal.Id);
-                var sqlQuery = "SET IDENTITY_INSERT Journales ON; INSERT INTO Journales (Id, Name, Author, Number, Price) VALUES(@Id, @Name, @Author, @Number, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Journales OFF";
+                var sqlQuery = "INSERT INTO Journales VALUES(@Name, @Author, @Number, @Price)";
                 int journalId = db.Query<int>(sqlQuery, journal).FirstOrDefault();
                 journal.Id = journalId;
             }
 
         }
+       
 
         public void Update(Journal journal)
         {

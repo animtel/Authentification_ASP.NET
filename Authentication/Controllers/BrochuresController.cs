@@ -30,10 +30,7 @@ namespace Authentication.Controllers
 
         public ActionResult Details(int id)
         {
-            foreach (var item in _brochureService.GetBrochureList())
-            {
-                _brochureService.Add(item);
-            }
+            
             Brochure brochure = _brochureService.GetBrochure(id);
             if (brochure != null)
             {
@@ -112,7 +109,7 @@ namespace Authentication.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Save(int id)
+        public FileResult Save(int id)
         {
 
             Brochure brochure = _brochureService.GetBrochure(id);
@@ -131,7 +128,12 @@ namespace Authentication.Controllers
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_brochure.json"), serialized);
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_brochure.xml"), stringWriter.ToString());
 
-            return RedirectToAction("Index");
+            string file_path = Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_brochure.json");
+
+            string file_type = "application/json";
+
+            string file_name = $"{id}_brochure.json";
+            return File(file_path, file_type, file_name);
         }
 
         [HttpGet]
@@ -152,8 +154,16 @@ namespace Authentication.Controllers
                 load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
             }
             char some = Convert.ToChar(fileName[fileName.Length - 1]);
-            if (some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
-            if (some == 'l') DeserializeXML(fileName);
+            try
+            {
+                if (some == 'n') DeserializeJSON(fileName);
+                if (some == 'l') DeserializeXML(fileName);
+            }
+            catch (Exception e)
+            {
+                return Content("<h2>Неверные данные!</h2>");
+            }
+            
 
             return RedirectToAction("Index");
         }

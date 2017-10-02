@@ -11,7 +11,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Authentication.Services;
 using Newtonsoft.Json;
-//сделать сериализацию и десериализацию объектов. Фикс создание через запрос. Переделать репозиторий журнал. (Подять бд)
+
 namespace Authentication.Controllers
 {
     public class BooksController : Controller
@@ -32,10 +32,7 @@ namespace Authentication.Controllers
 
         public ActionResult Details(int id)
         {
-            //foreach (var item in _bookService.GetBookList())
-            //{
-            //    _bookService.Add(item);
-            //}
+           
             Book book = _bookService.GetBook(id);
             if (book != null)
             {
@@ -114,7 +111,7 @@ namespace Authentication.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Save(int id)
+        public FileResult Save(int id)
         {
             
             Book book = _bookService.GetBook(id);
@@ -133,7 +130,13 @@ namespace Authentication.Controllers
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json"), serialized);
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.xml"), stringWriter.ToString());
 
-            return RedirectToAction("Index");
+           
+            string file_path = Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json");
+            
+            string file_type = "application/json";
+            
+            string file_name = $"{id}_book.json";
+            return File(file_path, file_type, file_name);
         }
 
         [HttpGet]

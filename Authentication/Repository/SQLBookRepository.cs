@@ -44,10 +44,9 @@ namespace Authentication.Repository
 
         public void Create(Book book)
         {
-            Delete(book.Id);
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "SET IDENTITY_INSERT Books ON; INSERT INTO dbo.Books (Id, Name, Author, Price) VALUES(@Id, @Name, @Author, @Price); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Books OFF";
+                var sqlQuery = "INSERT INTO Books VALUES(@Name, @Author, @Price)";
                 int bookId = db.Query<int>(sqlQuery, book).FirstOrDefault();
                 book.Id = bookId;
             }

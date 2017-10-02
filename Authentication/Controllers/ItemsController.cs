@@ -21,45 +21,44 @@ namespace Authentication.Controllers
             _bookService = new BookService();
             _journalService = new JournalService();
             _brochureService = new BrochureService();
-            DeletElements();
+            _itemService.DeleteAll();
         }
 
-        public void DeletElements()
-        {
-            for (int i = 0; i < _itemService.GetItemList().ToList().Count + 1; i++)
-            {
-                _itemService.Delete(i);
-            }
-        }
+       
 
-        
-        public ActionResult Index()
+        public void CreateBase()
         {
-            int id_of_items = 1;
-            //DeletElements();
+            int id_of_items = 0;
+            _itemService.DeleteAll();
 
-            
+
             foreach (var item in _brochureService.GetBrochureList())
             {
-                _itemService.Add(new Item{Id = id_of_items++, Name = item.Name, Author = "-", Price = item.Price, Number = "-", Type = "Brochure"});
+                _itemService.Add(new Item { Id = item.Id, Name = item.Name, Author = "-", Price = item.Price, Number = "-", Type = "Brochure" });
             }
             foreach (var item in _journalService.GetJournalsList())
             {
-                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
+                _itemService.Add(new Item { Id = item.Id, Name = item.Name, Author = item.Author, Price = item.Price, Number = item.Number, Type = "Jurnal" });
             }
             foreach (var item in _bookService.GetBookList())
             {
-                _itemService.Add(new Item { Id = id_of_items++, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
+                _itemService.Add(new Item { Id = item.Id, Name = item.Name, Author = item.Author, Price = item.Price, Number = "-", Type = "Book" });
             }
             _itemService.Save();
+        }
+
+        public ActionResult Index()
+        {
+            CreateBase();
             ViewBag.DataTable = _itemService.GetItemList();
             return View();
         }
 
         public ActionResult Details(int id)
         {
-            
-            Item item = _itemService.GetItem(id);
+            CreateBase();
+            int objId = id + _itemService.GetItemList().Count();
+            Item item = _itemService.GetItem(objId);
             if (item != null)
             {
                 return PartialView("Details", item);
@@ -71,6 +70,7 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
+            
             Item comp = _itemService.GetItem(id);
             if (comp != null)
             {
@@ -85,6 +85,7 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult DeleteRecord(int id)
         {
+           
             Item it = _itemService.GetItem(id);
 
             if (it != null)
@@ -94,7 +95,7 @@ namespace Authentication.Controllers
             }
             else
             {
-                return Content("<h2>Такого объекта е существует!</h2>");
+                return Content("<h2>Такого объекта не существует!</h2>");
             }
             return RedirectToAction("Index");
         }

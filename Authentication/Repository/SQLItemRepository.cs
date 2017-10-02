@@ -12,7 +12,7 @@ using Dapper;
 
 namespace Authentication.Repository
 {
-    public class SQLItemRepository : IRepository<Item>
+    public class SQLItemRepository
     {
         private TestBD _db;
 
@@ -46,10 +46,9 @@ namespace Authentication.Repository
 
         public void Create(Item item)
         {
-            Delete(item.Id);
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "SET IDENTITY_INSERT Items ON; INSERT INTO Items (Id, Name, Author, Price, Number, Type) VALUES(@Id, @Name, @Author, @Price, @Number, @Type); SELECT CAST(SCOPE_IDENTITY() as int); SET IDENTITY_INSERT Items OFF";
+                var sqlQuery = "INSERT INTO Items VALUES(@Name, @Author, @Price, @Number, @Type); SELECT CAST(SCOPE_IDENTITY() as int)";
                 int itemId = db.Query<int>(sqlQuery, item).FirstOrDefault();
                 item.Id = itemId;
             }
@@ -65,6 +64,15 @@ namespace Authentication.Repository
             }
         }
 
+        public void DeleteAll()
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = "DELETE FROM Items";
+                db.Execute(sqlQuery);
+            }
+        }
+
         public void Delete(int id)
         {
             using (IDbConnection db = new SqlConnection(connectionString))
@@ -72,8 +80,6 @@ namespace Authentication.Repository
                 var sqlQuery = "DELETE FROM Items WHERE Id = @id";
                 db.Execute(sqlQuery, new { id });
             }
-
-
         }
 
         public void Save()

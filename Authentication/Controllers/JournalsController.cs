@@ -70,7 +70,7 @@ namespace Authentication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Journal journal)
         {
-            _journalService.Add(journal);
+            _journalService.Update(journal);
             return RedirectToAction("Index");
         }
 
@@ -104,7 +104,7 @@ namespace Authentication.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Save(int id)
+        public FileResult Save(int id)
         {
 
             Journal journal = _journalService.GetJournal(id);
@@ -123,7 +123,12 @@ namespace Authentication.Controllers
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_journal.json"), serialized);
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_journal.xml"), stringWriter.ToString());
 
-            return RedirectToAction("Index");
+            string file_path = Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_journal.json");
+
+            string file_type = "application/json";
+
+            string file_name = $"{id}_journal.json";
+            return File(file_path, file_type, file_name);
         }
 
         [HttpGet]
