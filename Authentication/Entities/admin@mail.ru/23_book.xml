@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>1</Id>
-  <Name>Отцы и дети</Name>
-  <Author>И. Тургенев</Author>
-  <Price>180</Price>
+  <Id>23</Id>
+  <Name>book4</Name>
+  <Author>aut4</Author>
+  <Price>4</Price>
 </Document>

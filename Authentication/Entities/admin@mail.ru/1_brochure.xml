@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Id>1</Id>
-  <Name>Brochure1</Name>
-  <Theme>theme1</Theme>
-  <Color>red</Color>
-  <Price>123</Price>
-</Document>

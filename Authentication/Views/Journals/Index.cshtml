@@ -37,7 +37,7 @@
                             }
                             @if (User.IsInRole("admin"))
                              {
-                                <a class="btn" href="/Journals/Delete/@c.Id">Удалить </a>                                  
+                                <a class="btn" onclick="ConfirmDelete(@c.Id)">Удалить </a>                                  
                              }
                             <a class="btn" href="/Journals/Save/@c.Id">Save</a>
                         </p>
@@ -47,7 +47,36 @@
         </tbody>
     </table>
 
+    <form class="form-inline" method="post" action="/Journals/Create">
+        <div class="form-group">
+            <label>Name:</label>
+            <input id="Name" name="Name" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Author:</label>
+            <input id="Author" name="Author" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Price:</label>
+            <input id="Price" name="Price" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Number:</label>
+            <input id="Number" name="Number" type="text" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-default">Добавить</button>
+    </form> 
+
     <script>
+        function ConfirmDelete(id) {
+            var ok = confirm('Вы уверены, что хотите удалить?')
+            if (ok)
+                location = "/Journals/Delete/" + id;
+            else
+                location = "/Journals/Index/"
+        }
+
         function Table() {
             var target_head = $("#table_head");
             target_head.empty();

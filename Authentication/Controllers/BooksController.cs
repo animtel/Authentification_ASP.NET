@@ -12,6 +12,8 @@ using System.Xml.Serialization;
 using Authentication.Services;
 using Newtonsoft.Json;
 
+
+
 namespace Authentication.Controllers
 {
     public class BooksController : Controller
@@ -26,7 +28,7 @@ namespace Authentication.Controllers
         public ActionResult Index()
         {
             ViewBag.DataTable = _bookService.GetBookList().ToList();
-
+           
             return View("Index");
         }
 
@@ -39,12 +41,6 @@ namespace Authentication.Controllers
                 return PartialView("Details", book);
             }
             return View("Index");
-        }
-
-        [Authorize(Roles = "user")]
-        public ActionResult Create()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -83,33 +79,12 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
-            Book book = _bookService.GetBook(id);
-            if (book != null)
-            {
-                return PartialView("Delete", book);
-            }
-            return View("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
-        [Authorize(Roles = "admin")]
-        public ActionResult DeleteRecord(int id)
-        {
-            Book comp = _bookService.GetBook(id);
-
-            if (comp != null)
-            {
-                _bookService.Delete(id);
-                _bookService.Save();
-            }
-            else
-            {
-                return Content("<h2>Такого объекта е существует!</h2>");
-            }
+            _bookService.Delete(id);
+            
             return RedirectToAction("Index");
         }
+
+        
 
         public FileResult Save(int id)
         {
@@ -131,12 +106,14 @@ namespace Authentication.Controllers
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.xml"), stringWriter.ToString());
 
            
+
             string file_path = Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json");
-            
             string file_type = "application/json";
-            
             string file_name = $"{id}_book.json";
+            
+
             return File(file_path, file_type, file_name);
+
         }
 
         [HttpGet]

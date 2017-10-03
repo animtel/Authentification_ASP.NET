@@ -16,7 +16,7 @@ namespace Authentication
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Working", action = "test", id = UrlParameter.Optional }
+                defaults: new { controller = "Items", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

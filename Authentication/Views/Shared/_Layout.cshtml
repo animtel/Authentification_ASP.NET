@@ -36,11 +36,13 @@
                     <span class="icon-bar"></span>
 
                 </button>
-                @Html.ActionLink("BookStore", "test", "Working", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("BookStore", "Index", "Items", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "test", "Working")</li>
+                    <li>@Html.ActionLink("Books", "Index", "Books")</li>
+                    <li>@Html.ActionLink("Journals", "Index", "Journals")</li>
+                    <li>@Html.ActionLink("Bochures", "Index", "Brochures")</li>
                     @if (User.IsInRole("user") || User.IsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("Load File", "Index", "LoadFile")</li>

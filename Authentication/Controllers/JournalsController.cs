@@ -39,11 +39,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
-        public ActionResult Create()
-        {
-            return View();
-        }
-
+        
         [HttpPost]
         public ActionResult Create(Journal journal)
         {
@@ -76,33 +72,12 @@ namespace Authentication.Controllers
 
         public ActionResult Delete(int id)
         {
-            Journal comp = _journalService.GetJournal(id);
-            if (comp != null)
-            {
-                return PartialView("Delete", comp);
-            }
-            return View("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
-        [Authorize(Roles = "admin")]
-        public ActionResult DeleteRecord(int id)
-        {
-            Journal comp = _journalService.GetJournal(id);
-
-            if (comp != null)
-            {
-                _journalService.Delete(id);
-                _journalService.Save();
-            }
-            else
-            {
-                return Content("<h2>Такого объекта е существует!</h2>");
-            }
+            _journalService.Delete(id);
+            
             return RedirectToAction("Index");
         }
+
+        
 
         public FileResult Save(int id)
         {

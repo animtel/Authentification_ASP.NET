@@ -24,13 +24,9 @@ namespace Authentication.Controllers
             _itemService.DeleteAll();
         }
 
-       
-
         public void CreateBase()
         {
-            int id_of_items = 0;
             _itemService.DeleteAll();
-
 
             foreach (var item in _brochureService.GetBrochureList())
             {
@@ -64,40 +60,6 @@ namespace Authentication.Controllers
                 return PartialView("Details", item);
             }
             return View("Index");
-        }
-
-
-        [Authorize(Roles = "admin")]
-        public ActionResult Delete(int id)
-        {
-            
-            Item comp = _itemService.GetItem(id);
-            if (comp != null)
-            {
-                return PartialView("Delete", comp);
-            }
-            return View("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
-        [Authorize(Roles = "admin")]
-        public ActionResult DeleteRecord(int id)
-        {
-           
-            Item it = _itemService.GetItem(id);
-
-            if (it != null)
-            {
-                _itemService.Delete(id);
-                _itemService.Save();
-            }
-            else
-            {
-                return Content("<h2>Такого объекта не существует!</h2>");
-            }
-            return RedirectToAction("Index");
         }
 
     }

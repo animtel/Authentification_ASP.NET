@@ -39,12 +39,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
-        [Authorize(Roles = "user")]
-        public ActionResult Create()
-        {
-            return View();
-        }
-
+        
         [HttpPost]
         [Authorize]
         public ActionResult Create(Brochure brochure)
@@ -81,34 +76,11 @@ namespace Authentication.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
-            Brochure brochure = _brochureService.GetBrochure(id);
-            if (brochure != null)
-            {
-                return PartialView("Delete", brochure);
-            }
-            return View("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
-        [Authorize(Roles = "admin")]
-        public ActionResult DeleteRecord(int id)
-        {
-            Brochure comp = _brochureService.GetBrochure(id);
-
-            if (comp != null)
-            {
-                _brochureService.Delete(id);
-                _brochureService.Save();
-            }
-            else
-            {
-                return Content("<h2>Такого объекта е существует!</h2>");
-            }
+            _brochureService.Delete(id);
+            
             return RedirectToAction("Index");
         }
-
+        
         public FileResult Save(int id)
         {
 

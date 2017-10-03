@@ -397,7 +397,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\BrochuresController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\JournalsController.cs" />
     <Compile Include="Controllers\LoadFileController.cs" />
@@ -1139,14 +1138,10 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Books\Create.cshtml" />
-    <Content Include="Views\Books\Delete.cshtml" />
     <Content Include="Views\Books\Details.cshtml" />
     <Content Include="Views\Books\Edit.cshtml" />
     <Content Include="Views\Books\Index.cshtml" />
     <Content Include="Views\Items\Index.cshtml" />
-    <Content Include="Views\Journals\Create.cshtml" />
-    <Content Include="Views\Journals\Delete.cshtml" />
     <Content Include="Views\Journals\Details.cshtml" />
     <Content Include="Views\Journals\Edit.cshtml" />
     <Content Include="Views\Journals\Index.cshtml" />
@@ -1219,13 +1214,10 @@
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Items\Index_Admin.cshtml" />
-    <Content Include="Views\Items\Delete.cshtml" />
     <Content Include="Views\Items\Details.cshtml" />
     <Content Include="Views\Books\Load.cshtml" />
     <Content Include="Views\Journals\Load.cshtml" />
     <Content Include="Views\Brochures\Index.cshtml" />
-    <Content Include="Views\Brochures\Create.cshtml" />
-    <Content Include="Views\Brochures\Delete.cshtml" />
     <Content Include="Views\Brochures\Details.cshtml" />
     <Content Include="Views\Brochures\Edit.cshtml" />
     <Content Include="Views\Brochures\Load.cshtml" />
