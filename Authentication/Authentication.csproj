@@ -401,7 +401,6 @@
     <Compile Include="Controllers\JournalsController.cs" />
     <Compile Include="Controllers\LoadFileController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\WorkingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1145,7 +1144,6 @@
     <Content Include="Views\Journals\Details.cshtml" />
     <Content Include="Views\Journals\Edit.cshtml" />
     <Content Include="Views\Journals\Index.cshtml" />
-    <Content Include="Views\Working\test.cshtml" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.web.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.view.min.js.map" />

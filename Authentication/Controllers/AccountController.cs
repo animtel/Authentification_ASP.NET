@@ -79,7 +79,7 @@ namespace Authentication.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal("/Items/Index/");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -159,7 +159,7 @@ namespace Authentication.Controllers
                     await UserManager.AddToRoleAsync(user.Id, "user");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("test", "Working");
+                    return RedirectToAction("Index", "Items");
                 }
                 AddErrors(result);
             }

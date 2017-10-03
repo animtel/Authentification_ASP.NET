@@ -47,7 +47,7 @@ namespace Authentication.Repository
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "INSERT INTO Journales VALUES(@Name, @Author, @Number, @Price)";
+                var sqlQuery = "INSERT INTO Journales VALUES(@Name, @Author, @Year, @Publishing, @Number, @Price)";
                 int journalId = db.Query<int>(sqlQuery, journal).FirstOrDefault();
                 journal.Id = journalId;
             }
@@ -59,7 +59,7 @@ namespace Authentication.Repository
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "UPDATE Journales SET Name = @Name, Author = @Author, Number = @Number, Price = @Price WHERE Id = @Id";
+                var sqlQuery = "UPDATE Journales SET Name = @Name, Author = @Author, Year = @Year, Publishing = @Publishing, Number = @Number, Price = @Price WHERE Id = @Id";
                 db.Execute(sqlQuery, journal);
             }
         }

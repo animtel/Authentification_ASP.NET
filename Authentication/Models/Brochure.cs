@@ -18,6 +18,10 @@ namespace Authentication.Models
         public string Theme { get; set; }
         [XmlElement(ElementName = "Color")]
         public string Color { get; set; }
+        [XmlElement(ElementName = "Year")]
+        public string Year { get; set; }
+        [XmlElement(ElementName = "Company")]
+        public string Company { get; set; }
         [XmlElement(ElementName = "Price")]
         public int Price { get; set; }
     }

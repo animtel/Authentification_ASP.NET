@@ -9,12 +9,14 @@
         <colgroup>
             <col />
             <col />
-            <col style="width:110px" />
-            <col style="width:100px" />
+            <col style="width:150px" />
+            <col style="width:450px" />
         </colgroup>
         <thead id="table_head">
             <tr>
                 <th data-field="Name">Name</th>
+                <th data-field="Year">Year</th>
+                <th data-field="Company">Company</th>
                 <th>CRUD</th>
 
             </tr>
@@ -25,6 +27,12 @@
                 <tr>
                     <td>
                         <p>@c.Name</p>
+                    </td>
+                    <td>
+                        <p>@c.Year</p>
+                    </td>
+                    <td>
+                        <p>@c.Company</p>
                     </td>
                     <td>
                         <p>
@@ -48,28 +56,66 @@
         </tbody>
     </table>
 
-    <form class="form-inline" method="post" action="/brochures/Create">
-        <div class="form-group">
-            <label>Name:</label>
-            <input id="Name" name="Name" type="text" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Author:</label>
-            <input id="Color" name="Color" type="text" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Theme:</label>
-            <input id="Theme" name="Theme" type="text" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Price:</label>
-            <input id="Price" name="Price" type="text" class="form-control">
-        </div>
+    @if (User.IsInRole("user") || User.IsInRole("admin"))
+    {
+        <form action="/Brochures/Load">
 
-        <button type="submit" class="btn btn-default">Добавить</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Load Brochure-Xml/Json</button>
+        </form>
+
+        <h1> </h1>
+
+        <button onclick="document.getElementById('id01').style.display='block'" class="btn btn-primary">Add Brocure</button>
+    }
+
+    <div id="id01" class="modal">
+        <form class="modal-content animate" action="/Brochures/Create">
+            <div class="form-created">
+                <div class="form-group">
+                    <label>Name:      </label>
+                    <input id="Name" name="Name" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Theme:</label>
+                    <input id="Theme" name="Theme" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Color:</label>
+                    <input id="Color" name="Color" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Year:</label>
+                    <input id="Year" name="Year" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Company:</label>
+                    <input id="Company" name="Company" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Price:</label>
+                    <input id="Price" name="Price" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-info">Create</button>
+                    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
 
     <script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
     function ConfirmDelete(id) {
         var ok = confirm('Вы уверены, что хотите удалить?')
         if (ok)
@@ -81,7 +127,7 @@
     function Table() {
         var target_head = $("#table_head");
         target_head.empty();
-        target_head.append("<tr>< th data- field='Name'>Name</th><th>CRUD</th></tr >");
+        target_head.append("<tr>< th data- field='Name'>Name</th><th>Year</th><th>Company</th><th>CRUD</th></tr >");
         var target_data = $("#table_data");
         target_data.empty();
 

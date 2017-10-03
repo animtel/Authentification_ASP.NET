@@ -43,10 +43,6 @@
                     <li>@Html.ActionLink("Books", "Index", "Books")</li>
                     <li>@Html.ActionLink("Journals", "Index", "Journals")</li>
                     <li>@Html.ActionLink("Bochures", "Index", "Brochures")</li>
-                    @if (User.IsInRole("user") || User.IsInRole("Admin"))
-                    {
-                        <li>@Html.ActionLink("Load File", "Index", "LoadFile")</li>
-                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

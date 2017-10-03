@@ -9,12 +9,14 @@
         <colgroup>
             <col />
             <col />
-            <col style="width:110px" />
-            <col style="width:100px" />
+            <col style="width:150px" />
+            <col style="width:450px" />
         </colgroup>
         <thead id="table_head">
             <tr>
                 <th data-field="Name">Name</th>
+                <th data-field="Year">Year</th>
+                <th data-field="Publishing">Publishing</th>
                 <th>CRUD</th>
 
             </tr>
@@ -25,6 +27,12 @@
                 <tr>
                     <td>
                         <p>@c.Name</p>
+                    </td>
+                    <td>
+                        <p>@c.Year</p>
+                    </td>
+                    <td>
+                        <p>@c.Publishing</p>
                     </td>
                     <td>
                         <p>
@@ -46,25 +54,56 @@
             }
         </tbody>
     </table>
-    
-    <form class="form-inline" method="post" action="/Books/Create">
-        <div class="form-group">
-            <label >Name:</label>
-            <input id="Name" name="Name" type="text" class="form-control" >
-        </div>
-        <div class="form-group">
-            <label >Author:</label>
-            <input id="Author" name="Author" type="text" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Price:</label>
-            <input id="Price" name="Price" type="text" class="form-control">
-        </div>
-        
-        <button type="submit" class="btn btn-default">Добавить</button>
-    </form> 
-    
-    
+    <div class="form-add">
+    @if (User.IsInRole("user") || User.IsInRole("admin"))
+    {
+        <form action="/Books/Load">
+
+            <button type="submit" class="btn btn-primary">Load Book-Xml/Json</button>
+        </form>
+
+        <h1> </h1>
+
+        <button onclick="document.getElementById('id01').style.display='block'" class="btn btn-primary">Add Book</button>
+                   
+    }
+    </div>
+
+    <div id="id01" class="modal">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+        <form class="modal-content animate" action="/Books/Create">
+            <div class="form-created">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input id="Name" name="Name" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Author:</label>
+                    <input id="Author" name="Author" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Publishing:</label>
+                    <input id="Publishing" name="Publishing" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Year:</label>
+                    <input id="Year" name="Year" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Price:     </label>
+                    <input id="Price" name="Price" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-info">Create</button>
+                    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
+
     <script>
 
     function ConfirmDelete(id) {
@@ -75,10 +114,20 @@
             location = "/Books/Index/"
     }
 
+    // Get the modal
+    var modal = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
     function Table() {
         var target_head = $("#table_head");
         target_head.empty();
-        target_head.append("<tr>< th data- field='Name'>Name</th><th>CRUD</th></tr >");
+        target_head.append("<tr>< th data- field='Name'>Name</th><th>Year</th><th>Publishing</th><th>CRUD</th></tr >");
         var target_data = $("#table_data");
         target_data.empty();
 

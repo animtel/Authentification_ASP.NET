@@ -40,7 +40,7 @@ namespace Authentication.Controllers
         }
 
         
-        [HttpPost]
+        
         public ActionResult Create(Journal journal)
         {
             if (ModelState.IsValid)
@@ -111,8 +111,7 @@ namespace Authentication.Controllers
         {
             return View("Load");
         }
-        [HttpPost]
-
+        
         public ActionResult Load(HttpPostedFileBase load)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(Journal));
@@ -120,11 +119,32 @@ namespace Authentication.Controllers
 
             if (load != null)
             {
-                load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+                try
+                {
+                    // получаем имя файла
+                    load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+                }
+                catch (Exception e)
+                {
+                    load.SaveAs(Server.MapPath($"~/Entities/" + fileName));
+                }
             }
             char some = Convert.ToChar(fileName[fileName.Length - 1]);
-            if (some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
-            if (some == 'l') DeserializeXML(fileName);
+            try
+            {
+                if (some == 'n')
+                {
+                    DeserializeJSON(fileName);
+                }
+                if (some == 'l')
+                {
+                    DeserializeXML(fileName);
+                }
+            }
+            catch (Exception e)
+            {
+                return Content("Не правильный формат!");
+            }
 
             return RedirectToAction("Index");
         }

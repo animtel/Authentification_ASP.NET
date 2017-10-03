@@ -16,6 +16,10 @@ namespace Authentication.Models
         public string Name { get; set; }
         [XmlElement(ElementName = "Author")]
         public string Author { get; set; }
+        [XmlElement(ElementName = "Publishing")]
+        public string Publishing { get; set; }
+        [XmlElement(ElementName = "Year")]
+        public string Year { get; set; }
         [XmlElement(ElementName = "Price")]
         public int Price { get; set; }
     }

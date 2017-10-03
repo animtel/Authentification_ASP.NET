@@ -43,7 +43,7 @@ namespace Authentication.Controllers
             return View("Index");
         }
 
-        [HttpPost]
+        
         [Authorize]
         public ActionResult Create(Book book)
         {
@@ -55,6 +55,7 @@ namespace Authentication.Controllers
             }
             return View(book);
         }
+
 
         [Authorize]
         public ActionResult Edit(int id)
@@ -84,11 +85,8 @@ namespace Authentication.Controllers
             return RedirectToAction("Index");
         }
 
-        
-
         public FileResult Save(int id)
         {
-            
             Book book = _bookService.GetBook(id);
 
             string serialized = JsonConvert.SerializeObject(book);
@@ -101,16 +99,12 @@ namespace Authentication.Controllers
             DirectoryInfo dir = new DirectoryInfo(Server.MapPath($"~/Entities/{User.Identity.Name}"));
             dir.Create();
 
-
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json"), serialized);
             System.IO.File.WriteAllText(Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.xml"), stringWriter.ToString());
-
-           
 
             string file_path = Server.MapPath($"~/Entities/{User.Identity.Name}/{id}_book.json");
             string file_type = "application/json";
             string file_name = $"{id}_book.json";
-            
 
             return File(file_path, file_type, file_name);
 
@@ -129,14 +123,42 @@ namespace Authentication.Controllers
             XmlSerializer formatter = new XmlSerializer(typeof(Book));
             string fileName = System.IO.Path.GetFileName(load.FileName);
 
+            try
+            {
+                fileName = System.IO.Path.GetFileName(load.FileName);
+            }
+            catch(Exception e)
+            {
+                return Content("<h1>Неверный формат!</h1>");
+            }
             if (load != null)
             {
-                // получаем имя файла
-                load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+                try
+                {
+                    // получаем имя файла
+                    load.SaveAs(Server.MapPath($"~/Entities/{User.Identity.Name}/" + fileName));
+                }
+                catch(Exception e)
+                {
+                    load.SaveAs(Server.MapPath($"~/Entities/" + fileName));
+                }
             }
             char some = Convert.ToChar(fileName[fileName.Length-1]);
-            if(some == 'n') DeserializeJSON(fileName); // I don`t know, how it fix
-            if(some == 'l') DeserializeXML(fileName);
+            try
+            {
+                if (some == 'n')
+                {
+                    DeserializeJSON(fileName);
+                }
+                if (some == 'l')
+                {
+                    DeserializeXML(fileName);
+                }
+            }
+            catch (Exception e)
+            {
+                return Content("Не правильный формат!");
+            }
 
             return RedirectToAction("Index");
         }

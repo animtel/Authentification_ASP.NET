@@ -46,7 +46,7 @@ namespace Authentication.Repository
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "INSERT INTO Books VALUES(@Name, @Author, @Price)";
+                var sqlQuery = "INSERT INTO Books VALUES(@Name, @Author, @Price, @Year, @Publishing)";
                 int bookId = db.Query<int>(sqlQuery, book).FirstOrDefault();
                 book.Id = bookId;
             }
@@ -57,7 +57,7 @@ namespace Authentication.Repository
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "UPDATE dbo.Books SET Name = @Name, Author = @Author, Price = @Price WHERE Id = @Id";
+                var sqlQuery = "UPDATE dbo.Books SET Name = @Name, Author = @Author, Publishing = @Publishing, Year = @Year, Price = @Price WHERE Id = @Id";
                 db.Execute(sqlQuery, book);
             }
         }
